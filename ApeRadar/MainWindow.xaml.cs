@@ -152,12 +152,24 @@ namespace ApeRadar
             DataGridEnemiesList.UpdateLayout();
             foreach (DataGridColumn col in DataGridAlliesList.Columns)
             {
-                col.Width = DataGridLength.Auto;
+                col.Width = GetResponsiveColumnWidth(col);
             }
             foreach (DataGridColumn col in DataGridEnemiesList.Columns)
             {
-                col.Width = DataGridLength.Auto;
+                col.Width = GetResponsiveColumnWidth(col);
             }
+        }
+
+        private static DataGridLength GetResponsiveColumnWidth(DataGridColumn column)
+        {
+            if (column.MaxWidth <= 60)
+            {
+                return new DataGridLength(60);
+            }
+
+            return column.MaxWidth <= 240
+                ? DataGridLength.Auto
+                : new DataGridLength(1, DataGridLengthUnitType.Star);
         }
 
         private void ApplyChartTheme()
@@ -566,17 +578,6 @@ namespace ApeRadar
             Player? p = menu!.DataContext as Player;
             p!.WatchStatus = WatchStatus.NONE;
             WatchListUtils.SaveWatchList(p, AppPaths.WatchListFile);
-        }
-
-        //the ToolTipPlayerDetails.LayoutTransform is bind to the ViewboxPlayerList.Tag
-        //so the tooltip will scale to fit the size of the datagrid when changing window size
-        //a dumb way but it works
-        private void ViewboxPlayerList_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            if (VisualTreeHelper.GetChild(ViewboxPlayerList, 0) is ContainerVisual cv)
-            {
-                ViewboxPlayerList.Tag = cv.Transform;
-            }
         }
 
         private void ComboBoxChartType_SelectionChanged(object sender, SelectionChangedEventArgs e)
