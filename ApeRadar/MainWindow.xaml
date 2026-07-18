@@ -548,8 +548,8 @@
                 Padding="12">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="50"/>
-                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="58"/>
+                    <RowDefinition Height="58"/>
                     <RowDefinition Height="3*"/>
                     <RowDefinition Height="1*"/>
                 </Grid.RowDefinitions>
@@ -557,19 +557,19 @@
                     <ColumnDefinition Width="1*"/>
                     <ColumnDefinition Width="1.8*"/>
                 </Grid.ColumnDefinitions>
-                <StackPanel Grid.Row="0" Grid.Column="0" Margin="0,0,8,0">
+                <StackPanel Grid.Row="0" Grid.Column="0" Margin="0,0,8,8">
                     <Label Content="{DynamicResource LabelDisplayStyle}" Padding="0"/>
                     <ComboBox x:Name="ComboBoxMirrored" DisplayMemberPath="Content" SelectedValuePath="Value" HorizontalAlignment="Stretch" SelectionChanged="ComboBoxMirrored_SelectionChanged"/>
                 </StackPanel>
-                <StackPanel Grid.Row="0" Grid.Column="1" Margin="8,0,0,0">
+                <StackPanel Grid.Row="0" Grid.Column="1" Margin="8,0,0,8">
                     <Label Content="{DynamicResource LabelPlayerListSortBy}" Padding="0"/>
                     <ComboBox x:Name="ComboBoxSortBy" DisplayMemberPath="Content" SelectedValuePath="Value" HorizontalAlignment="Stretch" SelectionChanged="ComboBoxSortBy_SelectionChanged"/>
                 </StackPanel>
-                <StackPanel Grid.Row="1" Grid.Column="0" Margin="0,0,8,0">
+                <StackPanel Grid.Row="1" Grid.Column="0" Margin="0,0,8,8">
                     <Label Content="{DynamicResource LabelPlayerNames}" Padding="0"/>
                     <ComboBox x:Name="ComboBoxPlayerNamesVisibility" DisplayMemberPath="Content" SelectedValuePath="Value" HorizontalAlignment="Stretch" SelectionChanged="ComboBoxPlayerNamesVisibility_SelectionChanged"/>
                 </StackPanel>
-                <StackPanel Grid.Row="1" Grid.Column="1" Margin="8,0,0,0">
+                <StackPanel Grid.Row="1" Grid.Column="1" Margin="8,0,0,8">
                     <Label Content="{DynamicResource LabelChartType}" Padding="0"/>
                     <ComboBox x:Name="ComboBoxChartType" DisplayMemberPath="Content" SelectedValuePath="Value" HorizontalAlignment="Stretch" SelectionChanged="ComboBoxChartType_SelectionChanged"/>
                 </StackPanel>
