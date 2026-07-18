@@ -1,0 +1,108 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>True</UseWindowsForms>
+    <ApplicationIcon>Resources\Image\monkey-face-navy.ico</ApplicationIcon>
+    <Version>2.1.0</Version>
+    <AssemblyVersion>$(Version).0</AssemblyVersion>
+    <FileVersion>$(Version).0</FileVersion>
+    <ApeRadarSoftwareVersion>$(Version)</ApeRadarSoftwareVersion>
+    <ApeRadarSoftwareDate Condition="'$(ApeRadarSoftwareDate)' == ''">20260707</ApeRadarSoftwareDate>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <Deterministic>False</Deterministic>
+    <DebugType>embedded</DebugType>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <Deterministic>False</Deterministic>
+    <DebugType>embedded</DebugType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\Image\wows-numbers-icon.png" />
+    <None Remove="Resources\Image\wows-official-icon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Resources\Image\monkey-face-navy.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="LiveChartsCore.SkiaSharpView.WPF" Version="2.0.5" />
+    <PackageReference Include="log4net" Version="3.3.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+    <PackageReference Include="RestoreWindowPlace" Version="3.1.0" />
+  </ItemGroup>
+
+  <Target Name="GenerateBuildInfo" BeforeTargets="PrepareForBuild;MarkupCompilePass1;BeforeCompile">
+    <PropertyGroup>
+      <GeneratedBuildInfoFile>$(IntermediateOutputPath)BuildInfo.g.cs</GeneratedBuildInfoFile>
+    </PropertyGroup>
+    <ItemGroup>
+      <BuildInfoLines Include="namespace ApeRadar.Utils" />
+      <BuildInfoLines Include="{" />
+      <BuildInfoLines Include="public static class BuildInfo" />
+      <BuildInfoLines Include="{" />
+      <BuildInfoLines Include="    public const string SoftwareVersion = &quot;$(ApeRadarSoftwareVersion)&quot;%3B" />
+      <BuildInfoLines Include="    public const string SoftwareDate = &quot;$(ApeRadarSoftwareDate)&quot;%3B" />
+      <BuildInfoLines Include="}" />
+      <BuildInfoLines Include="}" />
+    </ItemGroup>
+    <WriteLinesToFile File="$(GeneratedBuildInfoFile)" Lines="@(BuildInfoLines)" Overwrite="true" />
+    <ItemGroup>
+      <Compile Include="$(GeneratedBuildInfoFile)" />
+    </ItemGroup>
+  </Target>
+
+  <ItemGroup>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="LICENSE.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="log4net.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="README.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Json\ships.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Json\ships_en-us.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Json\ships_zh-cn.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="WatchList.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\Image\wows-numbers-icon.png" />
+    <Resource Include="Resources\Image\wows-official-icon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Resources\Json\" />
+  </ItemGroup>
+
+</Project>

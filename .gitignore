@@ -1,0 +1,17 @@
+# Build output
+**/bin/
+**/obj/
+artifacts/
+
+# Visual Studio and local IDE state
+.vs/
+*.suo
+*.user
+
+# Local test/runtime data
+Log/
+Screenshot/
+Download/
+
+# Generated packages
+*.nupkg
