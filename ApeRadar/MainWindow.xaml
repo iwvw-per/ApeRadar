@@ -196,6 +196,67 @@
             </local:CenteredGlyph>
         </DataTemplate>
 
+        <DataTemplate x:Key="AverageSummaryCardsTemplate">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Border Grid.Column="0" Style="{StaticResource FluentElevatedSurfaceStyle}" Margin="0,0,4,0" Padding="12,8">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="2.4*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="{DynamicResource LabelAllies}" Style="{StaticResource FluentSectionHeaderStyle}"/>
+                            <TextBlock Text="{DynamicResource LabelAverageData}" FontSize="{DynamicResource AppFontSizeCaption}" Foreground="{DynamicResource AppMutedForegroundBrush}" Margin="0,2,0,0"/>
+                        </StackPanel>
+                        <UniformGrid Grid.Column="1" Columns="3" HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                            <StackPanel>
+                                <TextBlock Text="{DynamicResource LabelAverageAccountWinrate}" FontSize="{DynamicResource AppFontSizeCaption}" Foreground="{DynamicResource AppMutedForegroundBrush}" HorizontalAlignment="Center"/>
+                                <TextBlock Text="{Binding AllyAvgAccountWinrate, StringFormat={}{0:P2}}" FontSize="{DynamicResource AppFontSizeSubtitle}" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                            <StackPanel>
+                                <TextBlock Text="{DynamicResource LabelAverageWeightedWinrate}" FontSize="{DynamicResource AppFontSizeCaption}" Foreground="{DynamicResource AppMutedForegroundBrush}" HorizontalAlignment="Center"/>
+                                <TextBlock Text="{Binding AllyAvgWeightedWinrate, StringFormat={}{0:P2}}" FontSize="{DynamicResource AppFontSizeSubtitle}" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                            <StackPanel>
+                                <TextBlock Text="{DynamicResource LabelAverageBattleCount}" FontSize="{DynamicResource AppFontSizeCaption}" Foreground="{DynamicResource AppMutedForegroundBrush}" HorizontalAlignment="Center"/>
+                                <TextBlock Text="{Binding AllyAvgBattleCount, StringFormat={}{0:F1}}" FontSize="{DynamicResource AppFontSizeSubtitle}" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </UniformGrid>
+                    </Grid>
+                </Border>
+                <Border Grid.Column="1" Style="{StaticResource FluentElevatedSurfaceStyle}" Margin="4,0,0,0" Padding="12,8">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="2.4*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="{DynamicResource LabelEnemies}" Style="{StaticResource FluentSectionHeaderStyle}"/>
+                            <TextBlock Text="{DynamicResource LabelAverageData}" FontSize="{DynamicResource AppFontSizeCaption}" Foreground="{DynamicResource AppMutedForegroundBrush}" Margin="0,2,0,0"/>
+                        </StackPanel>
+                        <UniformGrid Grid.Column="1" Columns="3" HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                            <StackPanel>
+                                <TextBlock Text="{DynamicResource LabelAverageAccountWinrate}" FontSize="{DynamicResource AppFontSizeCaption}" Foreground="{DynamicResource AppMutedForegroundBrush}" HorizontalAlignment="Center"/>
+                                <TextBlock Text="{Binding EnemyAvgAccountWinrate, StringFormat={}{0:P2}}" FontSize="{DynamicResource AppFontSizeSubtitle}" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                            <StackPanel>
+                                <TextBlock Text="{DynamicResource LabelAverageWeightedWinrate}" FontSize="{DynamicResource AppFontSizeCaption}" Foreground="{DynamicResource AppMutedForegroundBrush}" HorizontalAlignment="Center"/>
+                                <TextBlock Text="{Binding EnemyAvgWeightedWinrate, StringFormat={}{0:P2}}" FontSize="{DynamicResource AppFontSizeSubtitle}" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                            <StackPanel>
+                                <TextBlock Text="{DynamicResource LabelAverageBattleCount}" FontSize="{DynamicResource AppFontSizeCaption}" Foreground="{DynamicResource AppMutedForegroundBrush}" HorizontalAlignment="Center"/>
+                                <TextBlock Text="{Binding EnemyAvgBattleCount, StringFormat={}{0:F1}}" FontSize="{DynamicResource AppFontSizeSubtitle}" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </UniformGrid>
+                    </Grid>
+                </Border>
+            </Grid>
+        </DataTemplate>
+
         <DataTemplate x:Key="NameTemplateMirrored">
             <StackPanel Orientation="Vertical" VerticalAlignment="Center">
                 <TextBlock FontSize="{Binding Source={x:Static p:Settings.Default}, Path=PlayerColumnFontSize}" Margin="5,0,5,0" Padding="0,-5,0,0" HorizontalAlignment="Right">
@@ -294,14 +355,14 @@
             </Setter>
         </Style>
 
-        <DataGridTemplateColumn x:Key="AlliesNameColumn" HeaderTemplate="{StaticResource NameHeaderTemplate}" CellTemplate="{StaticResource NameTemplate}" Width="*" MinWidth="240"/>
+        <DataGridTemplateColumn x:Key="AlliesNameColumn" HeaderTemplate="{StaticResource NameHeaderTemplate}" CellTemplate="{StaticResource NameTemplate}" Width="340" MinWidth="340" MaxWidth="340"/>
         <DataGridTemplateColumn x:Key="AlliesStatisticsColumn" HeaderTemplate="{StaticResource StatisticsHeaderTemplate}" HeaderStyle="{StaticResource DataGridStatisticsColumnHeaderStyle}" CellTemplate="{StaticResource StatisticsTemplate}" Width="Auto" MinWidth="0" MaxWidth="240"/>
         <DataGridTemplateColumn x:Key="AlliesTagColumn" HeaderTemplate="{StaticResource TagHeaderTemplate}" CellTemplate="{StaticResource TagTemplate}" CellStyle="{StaticResource TagCellStyle}" Width="60" MinWidth="60" MaxWidth="60"/>
-        <DataGridTemplateColumn x:Key="EnemiesNameColumn" HeaderTemplate="{StaticResource NameHeaderTemplate}" CellTemplate="{StaticResource NameTemplate}" Width="*" MinWidth="240"/>
+        <DataGridTemplateColumn x:Key="EnemiesNameColumn" HeaderTemplate="{StaticResource NameHeaderTemplate}" CellTemplate="{StaticResource NameTemplate}" Width="340" MinWidth="340" MaxWidth="340"/>
         <DataGridTemplateColumn x:Key="EnemiesStatisticsColumn" HeaderTemplate="{StaticResource StatisticsHeaderTemplate}" HeaderStyle="{StaticResource DataGridStatisticsColumnHeaderStyle}" CellTemplate="{StaticResource StatisticsTemplate}" Width="Auto" MinWidth="0" MaxWidth="240"/>
         <DataGridTemplateColumn x:Key="EnemiesTagColumn" HeaderTemplate="{StaticResource TagHeaderTemplate}" CellTemplate="{StaticResource TagTemplate}" CellStyle="{StaticResource TagCellStyle}" Width="60" MinWidth="60" MaxWidth="60"/>
 
-        <DataGridTemplateColumn x:Key="EnemiesNameColumnMirrored" HeaderTemplate="{StaticResource NameHeaderTemplate}" CellTemplate="{StaticResource NameTemplateMirrored}" Width="*" MinWidth="240">
+        <DataGridTemplateColumn x:Key="EnemiesNameColumnMirrored" HeaderTemplate="{StaticResource NameHeaderTemplate}" CellTemplate="{StaticResource NameTemplateMirrored}" Width="340" MinWidth="340" MaxWidth="340">
             <DataGridTemplateColumn.HeaderStyle>
                 <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource {x:Type DataGridColumnHeader}}">
                     <Setter Property="HorizontalContentAlignment" Value="Right"/>
@@ -455,67 +516,6 @@
             <ColumnDefinition Width="33*" MinWidth="330"/>
             <ColumnDefinition Width="16"/>
         </Grid.ColumnDefinitions>
-        <Grid Grid.Column="1" Margin="0,8,8,0">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-
-                <Border Grid.Column="0" Style="{StaticResource FluentElevatedSurfaceStyle}" Margin="0,0,4,0" Padding="12,8">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="2.4*"/>
-                        </Grid.ColumnDefinitions>
-                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
-                            <TextBlock Text="{DynamicResource LabelAllies}" Style="{StaticResource FluentSectionHeaderStyle}"/>
-                            <TextBlock Text="{DynamicResource LabelAverageData}" FontSize="{DynamicResource AppFontSizeCaption}" Foreground="{DynamicResource AppMutedForegroundBrush}" Margin="0,2,0,0"/>
-                        </StackPanel>
-                        <UniformGrid Grid.Column="1" Columns="3" HorizontalAlignment="Stretch" VerticalAlignment="Center">
-                            <StackPanel>
-                                <TextBlock Text="{DynamicResource LabelAverageAccountWinrate}" FontSize="{DynamicResource AppFontSizeCaption}" Foreground="{DynamicResource AppMutedForegroundBrush}" HorizontalAlignment="Center"/>
-                                <TextBlock Text="{Binding AllyAvgAccountWinrate, StringFormat={}{0:P2}}" FontSize="{DynamicResource AppFontSizeSubtitle}" HorizontalAlignment="Center"/>
-                            </StackPanel>
-                            <StackPanel>
-                                <TextBlock Text="{DynamicResource LabelAverageWeightedWinrate}" FontSize="{DynamicResource AppFontSizeCaption}" Foreground="{DynamicResource AppMutedForegroundBrush}" HorizontalAlignment="Center"/>
-                                <TextBlock Text="{Binding AllyAvgWeightedWinrate, StringFormat={}{0:P2}}" FontSize="{DynamicResource AppFontSizeSubtitle}" HorizontalAlignment="Center"/>
-                            </StackPanel>
-                            <StackPanel>
-                                <TextBlock Text="{DynamicResource LabelAverageBattleCount}" FontSize="{DynamicResource AppFontSizeCaption}" Foreground="{DynamicResource AppMutedForegroundBrush}" HorizontalAlignment="Center"/>
-                                <TextBlock Text="{Binding AllyAvgBattleCount, StringFormat={}{0:F1}}" FontSize="{DynamicResource AppFontSizeSubtitle}" HorizontalAlignment="Center"/>
-                            </StackPanel>
-                        </UniformGrid>
-                    </Grid>
-                </Border>
-                <Border Grid.Column="1" Style="{StaticResource FluentElevatedSurfaceStyle}" Margin="4,0,0,0" Padding="12,8">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="2.4*"/>
-                        </Grid.ColumnDefinitions>
-                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
-                            <TextBlock Text="{DynamicResource LabelEnemies}" Style="{StaticResource FluentSectionHeaderStyle}"/>
-                            <TextBlock Text="{DynamicResource LabelAverageData}" FontSize="{DynamicResource AppFontSizeCaption}" Foreground="{DynamicResource AppMutedForegroundBrush}" Margin="0,2,0,0"/>
-                        </StackPanel>
-                        <UniformGrid Grid.Column="1" Columns="3" HorizontalAlignment="Stretch" VerticalAlignment="Center">
-                            <StackPanel>
-                                <TextBlock Text="{DynamicResource LabelAverageAccountWinrate}" FontSize="{DynamicResource AppFontSizeCaption}" Foreground="{DynamicResource AppMutedForegroundBrush}" HorizontalAlignment="Center"/>
-                                <TextBlock Text="{Binding EnemyAvgAccountWinrate, StringFormat={}{0:P2}}" FontSize="{DynamicResource AppFontSizeSubtitle}" HorizontalAlignment="Center"/>
-                            </StackPanel>
-                            <StackPanel>
-                                <TextBlock Text="{DynamicResource LabelAverageWeightedWinrate}" FontSize="{DynamicResource AppFontSizeCaption}" Foreground="{DynamicResource AppMutedForegroundBrush}" HorizontalAlignment="Center"/>
-                                <TextBlock Text="{Binding EnemyAvgWeightedWinrate, StringFormat={}{0:P2}}" FontSize="{DynamicResource AppFontSizeSubtitle}" HorizontalAlignment="Center"/>
-                            </StackPanel>
-                            <StackPanel>
-                                <TextBlock Text="{DynamicResource LabelAverageBattleCount}" FontSize="{DynamicResource AppFontSizeCaption}" Foreground="{DynamicResource AppMutedForegroundBrush}" HorizontalAlignment="Center"/>
-                                <TextBlock Text="{Binding EnemyAvgBattleCount, StringFormat={}{0:F1}}" FontSize="{DynamicResource AppFontSizeSubtitle}" HorizontalAlignment="Center"/>
-                            </StackPanel>
-                        </UniformGrid>
-                    </Grid>
-                </Border>
-            </Grid>
-        </Grid>
         <Border Grid.Column="2" Style="{StaticResource FluentElevatedSurfaceStyle}" Margin="8,8,0,0" Padding="12,8">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -529,17 +529,22 @@
                 </StackPanel>
             </Grid>
         </Border>
-        <Border Grid.Row="1" Grid.Column="1" Grid.RowSpan="2"
+        <Border Grid.Row="0" Grid.Column="1" Grid.RowSpan="3"
                 Style="{StaticResource FluentSurfaceStyle}"
                 Margin="0,8,8,8"
                 Padding="8">
-            <Grid x:Name="PlayerListHost" VerticalAlignment="Stretch" SizeChanged="PlayerListHost_SizeChanged">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <DataGrid x:Name="DataGridAlliesList" Grid.Column="0" HorizontalAlignment="Stretch" Margin="0,0,4,0" VerticalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" CanUserResizeRows="False" CanUserResizeColumns="False" SelectionMode="Single" HeadersVisibility="Column" ItemsSource="{Binding Allies}" CanUserReorderColumns="False" CanUserSortColumns="False" RowStyle="{StaticResource DataGridPlayerListRowStyle}"/>
-                <DataGrid x:Name="DataGridEnemiesList" Grid.Column="1" HorizontalAlignment="Stretch" Margin="4,0,0,0" VerticalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" CanUserResizeRows="False" CanUserResizeColumns="False" SelectionMode="Single" HeadersVisibility="Column" ItemsSource="{Binding Enemies}" CanUserReorderColumns="False" CanUserSortColumns="False" RowStyle="{StaticResource DataGridPlayerListRowStyle}"/>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="84"/>
+                </Grid.RowDefinitions>
+                <Viewbox x:Name="PlayerListHost" Grid.Row="0" Stretch="Uniform" StretchDirection="Both" HorizontalAlignment="Stretch" VerticalAlignment="Top">
+                    <StackPanel Orientation="Horizontal">
+                        <DataGrid x:Name="DataGridAlliesList" HorizontalAlignment="Center" Margin="0,0,4,0" VerticalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" CanUserResizeRows="False" CanUserResizeColumns="False" SelectionMode="Single" HeadersVisibility="Column" ItemsSource="{Binding Allies}" CanUserReorderColumns="False" CanUserSortColumns="False" RowStyle="{StaticResource DataGridPlayerListRowStyle}"/>
+                        <DataGrid x:Name="DataGridEnemiesList" HorizontalAlignment="Center" Margin="4,0,0,0" VerticalAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" CanUserResizeRows="False" CanUserResizeColumns="False" SelectionMode="Single" HeadersVisibility="Column" ItemsSource="{Binding Enemies}" CanUserReorderColumns="False" CanUserSortColumns="False" RowStyle="{StaticResource DataGridPlayerListRowStyle}"/>
+                    </StackPanel>
+                </Viewbox>
+                <ContentControl Grid.Row="1" Margin="0,8,0,0" Content="{Binding}" ContentTemplate="{StaticResource AverageSummaryCardsTemplate}"/>
             </Grid>
         </Border>
         <Border Grid.Row="1" Grid.Column="2"

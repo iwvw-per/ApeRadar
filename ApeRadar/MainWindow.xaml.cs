@@ -152,50 +152,12 @@ namespace ApeRadar
             DataGridEnemiesList.UpdateLayout();
             foreach (DataGridColumn col in DataGridAlliesList.Columns)
             {
-                col.Width = GetResponsiveColumnWidth(col);
+                col.Width = DataGridLength.Auto;
             }
             foreach (DataGridColumn col in DataGridEnemiesList.Columns)
             {
-                col.Width = GetResponsiveColumnWidth(col);
+                col.Width = DataGridLength.Auto;
             }
-        }
-
-        private static DataGridLength GetResponsiveColumnWidth(DataGridColumn column)
-        {
-            if (column.MaxWidth <= 60)
-            {
-                return new DataGridLength(60);
-            }
-
-            return column.MaxWidth <= 240
-                ? DataGridLength.Auto
-                : new DataGridLength(1, DataGridLengthUnitType.Star);
-        }
-
-        private void PlayerListHost_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            UpdatePlayerListRowHeights();
-        }
-
-        private void UpdatePlayerListRowHeights()
-        {
-            if (PlayerListHost.ActualHeight <= 0)
-            {
-                return;
-            }
-
-            int maxPlayerCount = 0;
-            if (DataContext is Battlefield battlefield)
-            {
-                maxPlayerCount = Math.Max(battlefield.Allies.Count, battlefield.Enemies.Count);
-            }
-
-            double rowHeight = maxPlayerCount == 0
-                ? 44
-                : Math.Max(44, (PlayerListHost.ActualHeight - 36) / maxPlayerCount);
-
-            DataGridAlliesList.RowHeight = rowHeight;
-            DataGridEnemiesList.RowHeight = rowHeight;
         }
 
         private void ApplyChartTheme()
@@ -435,7 +397,6 @@ namespace ApeRadar
 
                 Battlefield battlefield = result.Battlefield;
                 DataContext = battlefield;
-                UpdatePlayerListRowHeights();
                 ApplyChartTheme();
 
                 if (Properties.Settings.Default.YuyukoAPIPushEnabled)
