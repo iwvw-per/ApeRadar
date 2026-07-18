@@ -87,33 +87,69 @@ jobs:
             throw 'Publish validation failed: LICENSE.txt was not produced.'
           }
 
+      - name: Publish framework-dependent lightweight Windows build
+        shell: pwsh
+        run: |
+          $buildDate = (Get-Date).ToUniversalTime().ToString('yyyyMMdd')
+          $publishDir = Join-Path $env:GITHUB_WORKSPACE "artifacts\publish\ApeRadar-${{ inputs.version }}-$env:RUNTIME_ID-lightweight"
+
+          dotnet publish .\ApeRadar\ApeRadar.csproj `
+            --configuration $env:CONFIGURATION `
+            --runtime $env:RUNTIME_ID `
+            --self-contained false `
+            --no-restore `
+            --output $publishDir `
+            -p:PublishSingleFile=true `
+            -p:IncludeNativeLibrariesForSelfExtract=true `
+            -p:Version=${{ inputs.version }} `
+            -p:ApeRadarSoftwareVersion=${{ inputs.version }} `
+            -p:ApeRadarSoftwareDate=$buildDate `
+            -p:DebugType=None `
+            -p:DebugSymbols=false
+
+          $requiredFiles = @(
+            'ApeRadar.exe',
+            'LICENSE.txt',
+            'README.txt',
+            'log4net.config',
+            'Resources\Json\ships.json'
+          )
+          foreach ($requiredFile in $requiredFiles) {
+            if (-not (Test-Path (Join-Path $publishDir $requiredFile))) {
+              throw "Lightweight publish validation failed: $requiredFile was not produced."
+            }
+          }
+
       - name: Package release assets
         id: package
         shell: pwsh
         run: |
           $assetBaseName = "ApeRadar-${{ inputs.version }}-$env:RUNTIME_ID"
+          $lightweightAssetBaseName = "ApeRadar-${{ inputs.version }}-$env:RUNTIME_ID-lightweight"
           $publishDir = Join-Path $env:GITHUB_WORKSPACE "artifacts\publish\$assetBaseName"
+          $lightweightPublishDir = Join-Path $env:GITHUB_WORKSPACE "artifacts\publish\$lightweightAssetBaseName"
           $releaseDir = Join-Path $env:GITHUB_WORKSPACE 'artifacts\release'
           $archivePath = Join-Path $releaseDir "$assetBaseName.zip"
           $checksumPath = Join-Path $releaseDir "$assetBaseName.sha256"
+          $lightweightArchivePath = Join-Path $releaseDir "$lightweightAssetBaseName.zip"
+          $lightweightChecksumPath = Join-Path $releaseDir "$lightweightAssetBaseName.sha256"
 
           New-Item -ItemType Directory -Path $releaseDir -Force | Out-Null
           Compress-Archive -Path (Join-Path $publishDir '*') -DestinationPath $archivePath -CompressionLevel Optimal -Force
+          Compress-Archive -Path (Join-Path $lightweightPublishDir '*') -DestinationPath $lightweightArchivePath -CompressionLevel Optimal -Force
 
           $hash = (Get-FileHash -Path $archivePath -Algorithm SHA256).Hash.ToLowerInvariant()
           Set-Content -Path $checksumPath -Value "$hash  $assetBaseName.zip" -Encoding ascii
+          $lightweightHash = (Get-FileHash -Path $lightweightArchivePath -Algorithm SHA256).Hash.ToLowerInvariant()
+          Set-Content -Path $lightweightChecksumPath -Value "$lightweightHash  $lightweightAssetBaseName.zip" -Encoding ascii
 
-          "asset_base_name=$assetBaseName" >> $env:GITHUB_OUTPUT
-          "archive_path=$archivePath" >> $env:GITHUB_OUTPUT
-          "checksum_path=$checksumPath" >> $env:GITHUB_OUTPUT
+          "release_dir=$releaseDir" >> $env:GITHUB_OUTPUT
 
       - name: Upload workflow artifact
         uses: actions/upload-artifact@v7
         with:
-          name: ${{ steps.package.outputs.asset_base_name }}
-          path: |
-            ${{ steps.package.outputs.archive_path }}
-            ${{ steps.package.outputs.checksum_path }}
+          name: ApeRadar-${{ inputs.version }}-win-x64-release-assets
+          path: artifacts\release\*
           if-no-files-found: error
           compression-level: 0
           retention-days: 30
@@ -123,9 +159,13 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          $assetBaseName = '${{ steps.package.outputs.asset_base_name }}'
-          $archivePath = '${{ steps.package.outputs.archive_path }}'
-          $checksumPath = '${{ steps.package.outputs.checksum_path }}'
+          $assetBaseName = "ApeRadar-${{ inputs.version }}-$env:RUNTIME_ID"
+          $lightweightAssetBaseName = "ApeRadar-${{ inputs.version }}-$env:RUNTIME_ID-lightweight"
+          $releaseDir = '${{ steps.package.outputs.release_dir }}'
+          $archivePath = Join-Path $releaseDir "$assetBaseName.zip"
+          $checksumPath = Join-Path $releaseDir "$assetBaseName.sha256"
+          $lightweightArchivePath = Join-Path $releaseDir "$lightweightAssetBaseName.zip"
+          $lightweightChecksumPath = Join-Path $releaseDir "$lightweightAssetBaseName.sha256"
           $tagName = '${{ inputs.tag_name }}'
           $releaseName = '${{ inputs.release_name }}'
           $notesPath = Join-Path $env:RUNNER_TEMP 'release-notes.md'
@@ -133,33 +173,38 @@ jobs:
           @"
           ## $releaseName
 
-          ApeRadar 的 Windows x64 正式版本。
+          ApeRadar 的 Windows x64 正式版本，提供完整自包含版和轻量版。
 
           ### 下载说明
 
-          - 主程序：``$assetBaseName.zip``
-          - SHA-256 校验文件：``$assetBaseName.sha256``
+          | 版本 | 文件 | 运行要求 |
+          | --- | --- | --- |
+          | 完整版（推荐） | ``$assetBaseName.zip`` | 已包含 .NET，无需额外安装 |
+          | 轻量版 | ``$lightweightAssetBaseName.zip`` | 需要 .NET 10 Desktop Runtime x64 |
+
+          两个压缩包都附带对应的 ``.sha256`` 校验文件。
           - 系统架构：Windows x64
-          - 发布方式：自包含（Self-contained）
 
-          当前压缩包已经包含 .NET 桌面运行时，解压后可直接运行 ``ApeRadar.exe``，**无需另外安装 .NET**。包内文件较多、体积较大，是因为包含了完整的 .NET、WPF/WinForms 运行组件以及图形库原生依赖，并非重复文件。
+          完整版已经包含 .NET 桌面运行时，解压后可直接运行 ``ApeRadar.exe``。轻量版只保留应用和必要资源，体积更小，但首次运行前必须安装 .NET 10 Desktop Runtime x64。
 
-          如果系统提示缺少或需要修复 .NET，请从微软官方下载 **.NET 10 Desktop Runtime x64**：
+          ### .NET 下载
+
+          微软官方下载：
 
           https://dotnet.microsoft.com/zh-cn/download/dotnet/10.0/runtime
 
-          > 下载页面中请选择“.NET 桌面运行时”下的 Windows x64 安装程序，不要选择 ASP.NET Core Runtime。
+          请在页面的“.NET 桌面运行时”栏目中选择 Windows x64 安装程序，不要选择 ASP.NET Core Runtime。
 
           ### 使用方法
 
-          1. 下载并完整解压 ``$assetBaseName.zip``。
+          1. 选择一个版本并完整解压对应的 ZIP 文件。
           2. 运行目录中的 ``ApeRadar.exe``。
-          3. 请勿只复制 EXE；当前自包含版本需要保留压缩包内的其他 DLL、配置和资源文件。
+          3. 请勿只复制 EXE；两个版本都需要保留压缩包内的配置和资源文件。
           "@ | Set-Content -Path $notesPath -Encoding utf8
 
           gh release view $tagName --repo '${{ github.repository }}' *> $null
           if ($LASTEXITCODE -eq 0) {
-            gh release upload $tagName $archivePath $checksumPath --clobber --repo '${{ github.repository }}'
+            gh release upload $tagName $archivePath $checksumPath $lightweightArchivePath $lightweightChecksumPath --clobber --repo '${{ github.repository }}'
             gh release edit $tagName --title $releaseName --notes-file $notesPath --latest --repo '${{ github.repository }}'
           }
           else {
@@ -171,7 +216,9 @@ jobs:
               '--notes-file', $notesPath,
               '--latest',
               $archivePath,
-              $checksumPath
+              $checksumPath,
+              $lightweightArchivePath,
+              $lightweightChecksumPath
             )
             if ('${{ inputs.prerelease }}' -eq 'true') {
               $arguments += '--prerelease'
