@@ -172,6 +172,32 @@ namespace ApeRadar
                 : new DataGridLength(1, DataGridLengthUnitType.Star);
         }
 
+        private void PlayerListHost_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            UpdatePlayerListRowHeights();
+        }
+
+        private void UpdatePlayerListRowHeights()
+        {
+            if (PlayerListHost.ActualHeight <= 0)
+            {
+                return;
+            }
+
+            int maxPlayerCount = 0;
+            if (DataContext is Battlefield battlefield)
+            {
+                maxPlayerCount = Math.Max(battlefield.Allies.Count, battlefield.Enemies.Count);
+            }
+
+            double rowHeight = maxPlayerCount == 0
+                ? 44
+                : Math.Max(44, (PlayerListHost.ActualHeight - 36) / maxPlayerCount);
+
+            DataGridAlliesList.RowHeight = rowHeight;
+            DataGridEnemiesList.RowHeight = rowHeight;
+        }
+
         private void ApplyChartTheme()
         {
             SKColor chartTextColor = ThemeManager.GetSkColor("AppChartTextColor", SKColors.Black);
@@ -409,6 +435,7 @@ namespace ApeRadar
 
                 Battlefield battlefield = result.Battlefield;
                 DataContext = battlefield;
+                UpdatePlayerListRowHeights();
                 ApplyChartTheme();
 
                 if (Properties.Settings.Default.YuyukoAPIPushEnabled)
