@@ -600,9 +600,5 @@ namespace ApeRadar
             this.DataContext = tmpDataContext;
         }
 
-        private void HyperLinkApeRadarWebsite_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
-        {
-            Process.Start("explorer.exe", e.Uri.AbsoluteUri);
-        }
     }
 }

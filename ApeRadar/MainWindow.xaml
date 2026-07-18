@@ -507,7 +507,7 @@
             <RowDefinition Height="39*" MinHeight="390"/>
             <RowDefinition Height="8*" MinHeight="80"/>
             <RowDefinition Height="60"/>
-            <RowDefinition Height="60"/>
+            <RowDefinition Height="110"/>
             <RowDefinition Height="10"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -529,7 +529,7 @@
                 </StackPanel>
             </Grid>
         </Border>
-        <Border Grid.Row="0" Grid.Column="1" Grid.RowSpan="3"
+        <Border Grid.Row="0" Grid.Column="1" Grid.RowSpan="5"
                 Style="{StaticResource FluentSurfaceStyle}"
                 Margin="0,8,8,8"
                 Padding="8">
@@ -593,13 +593,11 @@
                 Padding="8">
             <TextBox x:Name="TxtOutputText" HorizontalAlignment="Stretch" TextWrapping="Wrap" VerticalAlignment="Stretch" VerticalScrollBarVisibility="Auto" IsEnabled="{Binding Source={x:Static p:Settings.Default}, Path=OutputTextUnlock}" FontSize="{Binding Source={x:Static p:Settings.Default}, Path=OutputTextFontSize}"/>
         </Border>
-        <Border Grid.Row="3" Grid.Column="1" Grid.RowSpan="2"
+        <Border Grid.Row="4" Grid.Column="2"
                 Style="{StaticResource FluentSurfaceStyle}"
-                Margin="0,8,8,0"
-                Padding="8"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top">
-            <DataGrid x:Name="DataGridNotificationMessages" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" CanUserResizeRows="False" CanUserResizeColumns="False" SelectionMode="Single" HeadersVisibility="Column" ItemsSource="{Binding Source={x:Static utils:NotificationMessageUtils.NotificationMessageCollection}}" CanUserReorderColumns="False" CanUserSortColumns="False" Height="84" HorizontalAlignment="Left" VerticalAlignment="Top">
+                Margin="8,8,0,0"
+                Padding="8">
+            <DataGrid x:Name="DataGridNotificationMessages" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" CanUserResizeRows="False" CanUserResizeColumns="False" SelectionMode="Single" HeadersVisibility="Column" ItemsSource="{Binding Source={x:Static utils:NotificationMessageUtils.NotificationMessageCollection}}" CanUserReorderColumns="False" CanUserSortColumns="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <DataGrid.Resources>
                     <DataTemplate x:Key="TimeHeaderTemplate">
                         <TextBlock Text="{DynamicResource DataGridHeaderTime}" FontSize="{DynamicResource AppFontSizeCaption}" FontWeight="SemiBold"/>
@@ -615,33 +613,17 @@
                     </DataTemplate>
                 </DataGrid.Resources>
                 <DataGrid.Columns>
-                    <DataGridTemplateColumn HeaderTemplate="{StaticResource TimeHeaderTemplate}" CellTemplate="{StaticResource TimeTemplate}" MinWidth="120"/>
-                    <DataGridTemplateColumn HeaderTemplate="{StaticResource MessageHeaderTemplate}" CellTemplate="{StaticResource MessageTemplate}" MinWidth="570"/>
+                    <DataGridTemplateColumn HeaderTemplate="{StaticResource TimeHeaderTemplate}" CellTemplate="{StaticResource TimeTemplate}" Width="145" MinWidth="125"/>
+                    <DataGridTemplateColumn HeaderTemplate="{StaticResource MessageHeaderTemplate}" CellTemplate="{StaticResource MessageTemplate}" Width="*" MinWidth="220"/>
                 </DataGrid.Columns>
             </DataGrid>
         </Border>
-        <Grid Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2">
+        <Grid Grid.Row="3" Grid.Column="2">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                 <Button x:Name="BtnRefresh" Content="{DynamicResource BtnRefresh}" HorizontalAlignment="Left" Height="40" Margin="10,5,5,5" VerticalAlignment="Center" Width="80" Click="BtnRefresh_Click"/>
                 <Button x:Name="BtnOpen" Content="{DynamicResource BtnOpen}" HorizontalAlignment="Left" Height="40" Margin="5" VerticalAlignment="Center" Width="80" Click="BtnOpen_Click"/>
                 <Button x:Name="BtnConfig" Content="{DynamicResource BtnConfig}" HorizontalAlignment="Left" Height="40" Margin="5" VerticalAlignment="Center" Width="80" Click="BtnConfig_Click"/>
                 <Button x:Name="BtnScreenshot" Content="{DynamicResource BtnScreenshot}" HorizontalAlignment="Left" Height="40" Margin="5" VerticalAlignment="Center" Width="80" Click="BtnScreenshot_Click"/>
-            </StackPanel>
-        </Grid>
-        <Grid Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2">
-            <StackPanel Orientation="Vertical" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,0,10,0">
-                <TextBlock HorizontalAlignment="Right" FontSize="11">
-                    <Run Text="{DynamicResource WindowTitleApeRadar}"/>
-                    <Run Text="{x:Static utils:BuildInfo.SoftwareVersion}"/>
-                    <Run Text="Build"/>
-                    <Run Text="{x:Static utils:BuildInfo.SoftwareDate}"/>
-                </TextBlock>
-                <TextBlock Text="{DynamicResource LabelAboutLine1}" HorizontalAlignment="Right" FontSize="11" Margin="0,5,0,5"/>
-                <TextBlock HorizontalAlignment="Right" FontSize="11">
-                    <Run Text="{DynamicResource LabelAboutLine2Part1}"/>
-                    <Hyperlink x:Name="HyperLinkApeRadarWebsite" NavigateUri="https://lxdev.org/aperadar/" RequestNavigate="HyperLinkApeRadarWebsite_RequestNavigate">https://lxdev.org/aperadar/</Hyperlink>
-                    <Run Text="{DynamicResource LabelAboutLine2Part2}"/>
-                </TextBlock>
             </StackPanel>
         </Grid>
     </Grid>
