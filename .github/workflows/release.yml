@@ -133,11 +133,28 @@ jobs:
           @"
           ## $releaseName
 
-          Windows x64 self-contained build. No separate .NET Desktop Runtime installation is required.
+          ApeRadar 的 Windows x64 正式版本。
 
-          - Package: ``$assetBaseName.zip``
-          - Checksum: ``$assetBaseName.sha256``
-          - Runtime: ``win-x64``
+          ### 下载说明
+
+          - 主程序：``$assetBaseName.zip``
+          - SHA-256 校验文件：``$assetBaseName.sha256``
+          - 系统架构：Windows x64
+          - 发布方式：自包含（Self-contained）
+
+          当前压缩包已经包含 .NET 桌面运行时，解压后可直接运行 ``ApeRadar.exe``，**无需另外安装 .NET**。包内文件较多、体积较大，是因为包含了完整的 .NET、WPF/WinForms 运行组件以及图形库原生依赖，并非重复文件。
+
+          如果系统提示缺少或需要修复 .NET，请从微软官方下载 **.NET 10 Desktop Runtime x64**：
+
+          https://dotnet.microsoft.com/zh-cn/download/dotnet/10.0/runtime
+
+          > 下载页面中请选择“.NET 桌面运行时”下的 Windows x64 安装程序，不要选择 ASP.NET Core Runtime。
+
+          ### 使用方法
+
+          1. 下载并完整解压 ``$assetBaseName.zip``。
+          2. 运行目录中的 ``ApeRadar.exe``。
+          3. 请勿只复制 EXE；当前自包含版本需要保留压缩包内的其他 DLL、配置和资源文件。
           "@ | Set-Content -Path $notesPath -Encoding utf8
 
           gh release view $tagName --repo '${{ github.repository }}' *> $null
