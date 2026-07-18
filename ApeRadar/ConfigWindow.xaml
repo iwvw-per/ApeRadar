@@ -56,22 +56,124 @@
             <Setter Property="Height" Value="25"/>
             <Setter Property="ContextMenu" Value="{StaticResource RowMenu}"/>
         </Style>
+
+        <Style x:Key="ConfigNavigationTabItemStyle" TargetType="{x:Type TabItem}">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{DynamicResource AppForegroundBrush}"/>
+            <Setter Property="FontFamily" Value="{DynamicResource AppFontFamily}"/>
+            <Setter Property="FontSize" Value="{DynamicResource AppFontSizeBody}"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="Height" Value="50"/>
+            <Setter Property="Width" Value="196"/>
+            <Setter Property="Margin" Value="0,0,0,3"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TabItem}">
+                        <Grid>
+                            <Border x:Name="Chrome"
+                                    Background="{TemplateBinding Background}"
+                                    CornerRadius="{DynamicResource AppControlCornerRadius}"
+                                    Margin="5,0,0,0">
+                                <ContentPresenter ContentSource="Header"
+                                                  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                  Margin="14,0,10,0"
+                                                  RecognizesAccessKey="True"
+                                                  VerticalAlignment="Center"/>
+                            </Border>
+                            <Border x:Name="SelectionIndicator"
+                                    Background="{DynamicResource AppAccentBrush}"
+                                    CornerRadius="2"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Visibility="Collapsed"
+                                    Width="3"
+                                    Height="24"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Chrome" Property="Background" Value="{DynamicResource AppSelectionInactiveBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="Chrome" Property="Background" Value="{DynamicResource AppSelectionBrush}"/>
+                                <Setter TargetName="SelectionIndicator" Property="Visibility" Value="Visible"/>
+                                <Setter Property="FontWeight" Value="SemiBold"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Foreground" Value="{DynamicResource AppDisabledForegroundBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ConfigTabControlStyle" TargetType="{x:Type TabControl}">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TabControl}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="208"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Border Grid.Column="0"
+                                    Background="{DynamicResource AppSurfaceAltBrush}"
+                                    BorderBrush="{DynamicResource AppBorderBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="{DynamicResource AppSurfaceCornerRadius}"
+                                    Padding="6">
+                                <TabPanel x:Name="HeaderPanel" IsItemsHost="True" KeyboardNavigation.TabIndex="1"/>
+                            </Border>
+                            <Border Grid.Column="1"
+                                    Background="{DynamicResource AppSurfaceBrush}"
+                                    BorderBrush="{DynamicResource AppBorderBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="{DynamicResource AppSurfaceCornerRadius}"
+                                    Margin="12,0,0,0"
+                                    Padding="20">
+                                <ContentPresenter x:Name="PART_SelectedContentHost"
+                                                  ContentSource="SelectedContent"
+                                                  KeyboardNavigation.TabIndex="2"
+                                                  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                            </Border>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ConfigFooterButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="MinWidth" Value="96"/>
+            <Setter Property="Margin" Value="8,0,0,0"/>
+        </Style>
+
+        <Style x:Key="ConfigPrimaryButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource ConfigFooterButtonStyle}">
+            <Setter Property="Background" Value="{DynamicResource AppSelectionBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource AppAccentBrush}"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
     </Window.Resources>
-    <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" CanContentScroll="False">
-        <Grid Margin="16" MinHeight="520">
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" CanContentScroll="False" Focusable="False" FocusVisualStyle="{x:Null}">
+        <Grid Margin="20" MinHeight="540">
             <Grid.RowDefinitions>
-                <RowDefinition Height="16"/>
+                <RowDefinition Height="0"/>
                 <RowDefinition Height="*" MinHeight="420"/>
-                <RowDefinition Height="72"/>
-                <RowDefinition Height="16"/>
+                <RowDefinition Height="64"/>
+                <RowDefinition Height="0"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="180"/>
+                <ColumnDefinition Width="208"/>
                 <ColumnDefinition Width="*" MinWidth="680"/>
             </Grid.ColumnDefinitions>
             <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
-                <TabControl TabStripPlacement="Left">
-                    <TabItem Header="{DynamicResource TabHeaderGeneral}" Height="60" Width="180">
+                <TabControl TabStripPlacement="Left" Style="{StaticResource ConfigTabControlStyle}">
+                    <TabItem Header="{DynamicResource TabHeaderGeneral}" Style="{StaticResource ConfigNavigationTabItemStyle}">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="30"/>
@@ -176,9 +278,19 @@
                             <Grid Grid.Row="11" Grid.Column="3">
                                 <Label x:Name="LabelShipListVersionDateStr" VerticalAlignment="Center"/>
                             </Grid>
+                            <Grid Grid.Row="12" Grid.Column="3" Grid.ColumnSpan="2" VerticalAlignment="Bottom" Margin="5,12,5,0">
+                                <StackPanel>
+                                    <TextBlock Text="{DynamicResource LabelAboutLine1}" FontSize="{DynamicResource AppFontSizeCaption}" Foreground="{DynamicResource AppMutedForegroundBrush}"/>
+                                    <TextBlock FontSize="{DynamicResource AppFontSizeCaption}" Margin="0,4,0,0">
+                                        <Run Text="{DynamicResource LabelAboutLine2Part1}"/>
+                                        <Hyperlink NavigateUri="https://lxdev.org/aperadar/" RequestNavigate="HyperLinkApeRadarWebsite_RequestNavigate">https://lxdev.org/aperadar/</Hyperlink>
+                                        <Run Text="{DynamicResource LabelAboutLine2Part2}"/>
+                                    </TextBlock>
+                                </StackPanel>
+                            </Grid>
                         </Grid>
                     </TabItem>
-                    <TabItem Header="{DynamicResource TabHeaderAppearance}"  Height="60" Width="180">
+                    <TabItem Header="{DynamicResource TabHeaderAppearance}" Style="{StaticResource ConfigNavigationTabItemStyle}">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="30"/>
@@ -344,7 +456,7 @@
                             </Grid>
                         </Grid>
                     </TabItem>
-                    <TabItem Header="{DynamicResource TabHeaderWinrateAndTag}" Height="60" Width="180">
+                    <TabItem Header="{DynamicResource TabHeaderWinrateAndTag}" Style="{StaticResource ConfigNavigationTabItemStyle}">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="30"/>
@@ -531,7 +643,7 @@
                             </Grid>
                         </Grid>
                     </TabItem>
-                    <TabItem Height="60" Width="180">
+                    <TabItem Style="{StaticResource ConfigNavigationTabItemStyle}">
                         <TabItem.Header>
                             <TextBlock TextAlignment="Left" HorizontalAlignment="Left">
                                 <Run Text="{DynamicResource TabHeaderTextOutput}"/>
@@ -630,7 +742,7 @@
                             </Grid>
                         </Grid>
                     </TabItem>
-                    <TabItem Height="60" Width="180">
+                    <TabItem Style="{StaticResource ConfigNavigationTabItemStyle}">
                         <TabItem.Header>
                             <TextBlock TextAlignment="Left" HorizontalAlignment="Left">
                                 <Run Text="{DynamicResource TabHeaderTextOutput}"/>
@@ -685,7 +797,7 @@
                             </Grid>
                         </Grid>
                     </TabItem>
-                    <TabItem Header="{DynamicResource TabHeaderWatchList}" Height="60" Width="180">
+                    <TabItem Header="{DynamicResource TabHeaderWatchList}" Style="{StaticResource ConfigNavigationTabItemStyle}">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="30"/>
@@ -745,7 +857,7 @@
                             </Grid>
                         </Grid>
                     </TabItem>
-                    <TabItem Header="{DynamicResource TabHeaderAdvanced}" Height="60" Width="180">
+                    <TabItem Header="{DynamicResource TabHeaderAdvanced}" Style="{StaticResource ConfigNavigationTabItemStyle}">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="30"/>
@@ -792,10 +904,10 @@
                 </TabControl>
             </Grid>
             <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom">
-                    <Button x:Name="BtnSave" Content="{DynamicResource BtnSave}" HorizontalAlignment="Left" Height="50" VerticalAlignment="Center" Width="100" Click="BtnSave_Click" Margin="5"/>
-                    <Button x:Name="BtnCancel" Content="{DynamicResource BtnCancel}" HorizontalAlignment="Left" Height="50" VerticalAlignment="Center" Width="100" Click="BtnCancel_Click" Margin="5"/>
-                    <Button x:Name="BtnDefault" Content="{DynamicResource BtnDefault}" HorizontalAlignment="Left" Height="50" VerticalAlignment="Center" Width="100" Click="BtnDefault_Click" Margin="42,5,5,5"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+                    <Button x:Name="BtnSave" Style="{StaticResource ConfigPrimaryButtonStyle}" Content="{DynamicResource BtnSave}" Click="BtnSave_Click"/>
+                    <Button x:Name="BtnCancel" Style="{StaticResource ConfigFooterButtonStyle}" Content="{DynamicResource BtnCancel}" Click="BtnCancel_Click"/>
+                    <Button x:Name="BtnDefault" Style="{StaticResource ConfigFooterButtonStyle}" Content="{DynamicResource BtnDefault}" Click="BtnDefault_Click"/>
                 </StackPanel>
             </Grid>
         </Grid>

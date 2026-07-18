@@ -281,6 +281,11 @@ namespace ApeRadar
             LoadSettings();
         }
 
+        private void HyperLinkApeRadarWebsite_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
+        {
+            Process.Start("explorer.exe", e.Uri.AbsoluteUri);
+        }
+
         private void ConfigWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             LoadSettings();
