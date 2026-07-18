@@ -14,6 +14,8 @@ namespace ApeRadar.Utils
         private const string ThemeRegistryPath = @"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize";
         private const string AppsUseLightThemeValue = "AppsUseLightTheme";
         private const string ThemeDictionaryPath = "/Resources/Themes/";
+        private const string SharedTokensDictionaryName = "FluentTokens.xaml";
+        private const string ControlStylesDictionaryName = "ControlStyles.xaml";
         private const int DwmwaUseImmersiveDarkMode = 20;
         private const int DwmwaUseImmersiveDarkModeBefore20H1 = 19;
 
@@ -141,11 +143,15 @@ namespace ApeRadar.Utils
             string themeName = isDarkTheme ? "DarkTheme.xaml" : "LightTheme.xaml";
             app.Resources.MergedDictionaries.Add(new ResourceDictionary
             {
+                Source = new Uri($"{ThemeDictionaryPath}{SharedTokensDictionaryName}", UriKind.Relative)
+            });
+            app.Resources.MergedDictionaries.Add(new ResourceDictionary
+            {
                 Source = new Uri($"{ThemeDictionaryPath}{themeName}", UriKind.Relative)
             });
             app.Resources.MergedDictionaries.Add(new ResourceDictionary
             {
-                Source = new Uri($"{ThemeDictionaryPath}ControlStyles.xaml", UriKind.Relative)
+                Source = new Uri($"{ThemeDictionaryPath}{ControlStylesDictionaryName}", UriKind.Relative)
             });
         }
 

@@ -2,14 +2,41 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Style TargetType="{x:Type Window}">
         <Setter Property="Background" Value="{DynamicResource AppBackgroundBrush}"/>
+        <Setter Property="FontFamily" Value="{DynamicResource AppFontFamily}"/>
+        <Setter Property="FontSize" Value="{DynamicResource AppFontSizeBody}"/>
+        <Setter Property="Foreground" Value="{DynamicResource AppForegroundBrush}"/>
+    </Style>
+
+    <Style x:Key="FluentSurfaceStyle" TargetType="{x:Type Border}">
+        <Setter Property="Background" Value="{DynamicResource AppSurfaceBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource AppBorderBrush}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius" Value="{DynamicResource AppSurfaceCornerRadius}"/>
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+    </Style>
+
+    <Style x:Key="FluentElevatedSurfaceStyle" TargetType="{x:Type Border}" BasedOn="{StaticResource FluentSurfaceStyle}">
+        <Setter Property="Background" Value="{DynamicResource AppSurfaceElevatedBrush}"/>
+    </Style>
+
+    <Style x:Key="FluentSectionHeaderStyle" TargetType="{x:Type TextBlock}">
+        <Setter Property="FontFamily" Value="{DynamicResource AppFontFamily}"/>
+        <Setter Property="FontSize" Value="{DynamicResource AppFontSizeSubtitle}"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Foreground" Value="{DynamicResource AppForegroundBrush}"/>
     </Style>
 
     <Style TargetType="{x:Type TextBlock}">
         <Setter Property="Foreground" Value="{DynamicResource AppForegroundBrush}"/>
+        <Setter Property="FontFamily" Value="{DynamicResource AppFontFamily}"/>
+        <Setter Property="FontSize" Value="{DynamicResource AppFontSizeBody}"/>
     </Style>
 
     <Style TargetType="{x:Type Label}">
         <Setter Property="Foreground" Value="{DynamicResource AppForegroundBrush}"/>
+        <Setter Property="FontFamily" Value="{DynamicResource AppFontFamily}"/>
+        <Setter Property="FontSize" Value="{DynamicResource AppFontSizeBody}"/>
+        <Setter Property="Padding" Value="0"/>
         <Style.Triggers>
             <Trigger Property="IsEnabled" Value="False">
                 <Setter Property="Foreground" Value="{DynamicResource AppDisabledForegroundBrush}"/>
@@ -22,14 +49,18 @@
         <Setter Property="Foreground" Value="{DynamicResource AppForegroundBrush}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource AppBorderBrush}"/>
         <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="Padding" Value="8,3"/>
+        <Setter Property="MinHeight" Value="{DynamicResource AppControlMinHeight}"/>
+        <Setter Property="Padding" Value="{DynamicResource AppCompactControlPadding}"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
                     <Border x:Name="Chrome"
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}">
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{DynamicResource AppControlCornerRadius}">
                         <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                           Margin="{TemplateBinding Padding}"
@@ -43,7 +74,7 @@
                             <Setter TargetName="Chrome" Property="Background" Value="{DynamicResource AppSelectionBrush}"/>
                         </Trigger>
                         <Trigger Property="IsKeyboardFocused" Value="True">
-                            <Setter TargetName="Chrome" Property="BorderBrush" Value="{DynamicResource AppHyperlinkBrush}"/>
+                            <Setter TargetName="Chrome" Property="BorderBrush" Value="{DynamicResource AppAccentBrush}"/>
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter Property="Foreground" Value="{DynamicResource AppDisabledForegroundBrush}"/>
@@ -89,7 +120,7 @@
                             <Setter TargetName="Box" Property="BorderBrush" Value="{DynamicResource AppForegroundBrush}"/>
                         </Trigger>
                         <Trigger Property="IsKeyboardFocused" Value="True">
-                            <Setter TargetName="Box" Property="BorderBrush" Value="{DynamicResource AppHyperlinkBrush}"/>
+                            <Setter TargetName="Box" Property="BorderBrush" Value="{DynamicResource AppAccentBrush}"/>
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter Property="Foreground" Value="{DynamicResource AppDisabledForegroundBrush}"/>
@@ -126,7 +157,8 @@
                                     <Border x:Name="ToggleChrome"
                                             Background="{TemplateBinding Background}"
                                             BorderBrush="{TemplateBinding BorderBrush}"
-                                            BorderThickness="{TemplateBinding BorderThickness}">
+                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                            CornerRadius="{DynamicResource AppControlCornerRadius}">
                                         <Grid>
                                             <TextBlock Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}"
                                                        HorizontalAlignment="Left"
@@ -166,6 +198,7 @@
                             <Border Background="{DynamicResource AppSurfaceBrush}"
                                     BorderBrush="{DynamicResource AppBorderBrush}"
                                     BorderThickness="1"
+                                    CornerRadius="{DynamicResource AppSurfaceCornerRadius}"
                                     MinWidth="{Binding ActualWidth, RelativeSource={RelativeSource TemplatedParent}}">
                                 <ScrollViewer CanContentScroll="True">
                                     <ItemsPresenter/>
@@ -182,7 +215,7 @@
                             <Setter Property="BorderBrush" Value="{DynamicResource AppForegroundBrush}"/>
                         </Trigger>
                         <Trigger Property="IsKeyboardFocusWithin" Value="True">
-                            <Setter Property="BorderBrush" Value="{DynamicResource AppHyperlinkBrush}"/>
+                            <Setter Property="BorderBrush" Value="{DynamicResource AppAccentBrush}"/>
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter Property="Background" Value="{DynamicResource AppSurfaceAltBrush}"/>
@@ -229,13 +262,16 @@
         <Setter Property="BorderBrush" Value="{DynamicResource AppBorderBrush}"/>
         <Setter Property="SelectionBrush" Value="{DynamicResource AppSelectionBrush}"/>
         <Setter Property="CaretBrush" Value="{DynamicResource AppForegroundBrush}"/>
+        <Setter Property="MinHeight" Value="{DynamicResource AppControlMinHeight}"/>
+        <Setter Property="Padding" Value="{DynamicResource AppCompactControlPadding}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TextBox}">
                     <Border x:Name="Chrome"
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}">
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{DynamicResource AppControlCornerRadius}">
                         <ScrollViewer x:Name="PART_ContentHost" Margin="2"/>
                     </Border>
                     <ControlTemplate.Triggers>
@@ -245,7 +281,7 @@
                             <Setter TargetName="Chrome" Property="BorderBrush" Value="{DynamicResource AppGridLineBrush}"/>
                         </Trigger>
                         <Trigger Property="IsKeyboardFocusWithin" Value="True">
-                            <Setter TargetName="Chrome" Property="BorderBrush" Value="{DynamicResource AppHyperlinkBrush}"/>
+                            <Setter TargetName="Chrome" Property="BorderBrush" Value="{DynamicResource AppAccentBrush}"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -278,7 +314,8 @@
                     <Border x:Name="Chrome"
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}">
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{DynamicResource AppControlCornerRadius}">
                         <ContentPresenter ContentSource="Header"
                                           HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                           Margin="{TemplateBinding Padding}"
@@ -308,7 +345,7 @@
         <Setter Property="Background" Value="{DynamicResource AppSurfaceBrush}"/>
         <Setter Property="Foreground" Value="{DynamicResource AppForegroundBrush}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource AppBorderBrush}"/>
-        <Setter Property="GridLinesVisibility" Value="All"/>
+        <Setter Property="GridLinesVisibility" Value="Horizontal"/>
         <Setter Property="HorizontalGridLinesBrush" Value="{DynamicResource AppGridLineBrush}"/>
         <Setter Property="VerticalGridLinesBrush" Value="{DynamicResource AppGridLineBrush}"/>
         <Setter Property="RowBackground" Value="{DynamicResource AppSurfaceBrush}"/>
@@ -342,6 +379,8 @@
         <Setter Property="Background" Value="{DynamicResource AppSurfaceAltBrush}"/>
         <Setter Property="Foreground" Value="{DynamicResource AppForegroundBrush}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource AppBorderBrush}"/>
+        <Setter Property="Padding" Value="8,6"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
     </Style>
 
     <Style TargetType="{x:Type ContextMenu}">
@@ -350,6 +389,7 @@
         <Setter Property="BorderBrush" Value="{DynamicResource AppBorderBrush}"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="Padding" Value="2"/>
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
     </Style>
 
     <Style x:Key="ThemedMenuItemStyle" TargetType="{x:Type MenuItem}">
@@ -366,7 +406,8 @@
                     <Border x:Name="Chrome"
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}">
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{DynamicResource AppControlCornerRadius}">
                         <Grid MinHeight="28">
                             <ContentPresenter ContentSource="Header"
                                               ContentStringFormat="{TemplateBinding HeaderStringFormat}"
@@ -380,7 +421,7 @@
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsHighlighted" Value="True">
                             <Setter TargetName="Chrome" Property="Background" Value="{DynamicResource AppSelectionBrush}"/>
-                            <Setter TargetName="Chrome" Property="BorderBrush" Value="{DynamicResource AppHyperlinkBrush}"/>
+                            <Setter TargetName="Chrome" Property="BorderBrush" Value="{DynamicResource AppAccentBrush}"/>
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter Property="Foreground" Value="{DynamicResource AppDisabledForegroundBrush}"/>
@@ -413,6 +454,7 @@
         <Setter Property="Background" Value="{DynamicResource AppSurfaceBrush}"/>
         <Setter Property="Foreground" Value="{DynamicResource AppForegroundBrush}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource AppBorderBrush}"/>
+        <Setter Property="Padding" Value="8,5"/>
     </Style>
 
     <Style TargetType="{x:Type Hyperlink}">
