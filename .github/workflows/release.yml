@@ -195,6 +195,10 @@ jobs:
 
           请在页面的“.NET 桌面运行时”栏目中选择 Windows x64 安装程序，不要选择 ASP.NET Core Runtime。
 
+          ### 许可证
+
+          ApeRadar 使用 MIT License，完整文本见源码仓库中的 ``LICENSE`` 文件。
+
           ### 使用方法
 
           1. 选择一个版本并完整解压对应的 ZIP 文件。
