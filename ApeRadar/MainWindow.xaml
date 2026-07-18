@@ -534,7 +534,7 @@
                 Margin="0,8,8,8"
                 Padding="8">
             <Viewbox x:Name="PlayerListHost" Stretch="Uniform" StretchDirection="Both" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                <Grid Width="1400">
+                <Grid Width="1900" Height="1100">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
