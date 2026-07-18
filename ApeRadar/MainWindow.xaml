@@ -597,16 +597,16 @@
             <DataGrid x:Name="DataGridNotificationMessages" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" CanUserResizeRows="False" CanUserResizeColumns="False" SelectionMode="Single" HeadersVisibility="Column" ItemsSource="{Binding Source={x:Static utils:NotificationMessageUtils.NotificationMessageCollection}}" CanUserReorderColumns="False" CanUserSortColumns="False" Height="84" HorizontalAlignment="Left" VerticalAlignment="Top">
                 <DataGrid.Resources>
                     <DataTemplate x:Key="TimeHeaderTemplate">
-                        <TextBlock Text="{DynamicResource DataGridHeaderTime}" FontSize="11"/>
+                        <TextBlock Text="{DynamicResource DataGridHeaderTime}" FontSize="{DynamicResource AppFontSizeCaption}" FontWeight="SemiBold"/>
                     </DataTemplate>
                     <DataTemplate x:Key="TimeTemplate">
-                        <TextBlock Text="{Binding Time, StringFormat='{}{0:yyyy-MM-dd HH:mm:ss}'}" FontSize="11" Foreground="{Binding Type, Converter={StaticResource CvtNotificationMessageColor}}" Margin="5,0,0,0"/>
+                        <TextBlock Text="{Binding Time, StringFormat='{}{0:yyyy-MM-dd HH:mm:ss}'}" FontSize="{DynamicResource AppFontSizeCaption}" Foreground="{Binding Type, Converter={StaticResource CvtNotificationMessageColor}}" Margin="5,1,0,1"/>
                     </DataTemplate>
                     <DataTemplate x:Key="MessageHeaderTemplate">
-                        <TextBlock Text="{DynamicResource DataGridHeaderMessage}" FontSize="11"/>
+                        <TextBlock Text="{DynamicResource DataGridHeaderMessage}" FontSize="{DynamicResource AppFontSizeCaption}" FontWeight="SemiBold"/>
                     </DataTemplate>
                     <DataTemplate x:Key="MessageTemplate">
-                        <TextBlock Text="{Binding Message}" FontSize="11" Foreground="{Binding Type, Converter={StaticResource CvtNotificationMessageColor}}" Margin="5,0,0,0" TextTrimming="CharacterEllipsis" ToolTip="{Binding Message}"/>
+                        <TextBlock Text="{Binding Message}" FontSize="{DynamicResource AppFontSizeCaption}" Foreground="{Binding Type, Converter={StaticResource CvtNotificationMessageColor}}" Margin="5,1,0,1" TextTrimming="CharacterEllipsis" ToolTip="{Binding Message}"/>
                     </DataTemplate>
                 </DataGrid.Resources>
                 <DataGrid.Columns>
