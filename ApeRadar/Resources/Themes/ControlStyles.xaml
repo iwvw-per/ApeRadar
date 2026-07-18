@@ -143,6 +143,7 @@
         <Setter Property="Padding" Value="10,4,6,4"/>
         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
         <Setter Property="ScrollViewer.CanContentScroll" Value="True"/>
         <Setter Property="TextElement.Foreground" Value="{DynamicResource AppForegroundBrush}"/>
         <Setter Property="Template">
@@ -155,6 +156,7 @@
                                       BorderThickness="{TemplateBinding BorderThickness}"
                                       ClickMode="Press"
                                       Focusable="False"
+                                      FocusVisualStyle="{x:Null}"
                                       IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
                             <ToggleButton.Template>
                                 <ControlTemplate TargetType="{x:Type ToggleButton}">
@@ -258,7 +260,6 @@
                         </Trigger>
                         <Trigger Property="IsKeyboardFocusWithin" Value="True">
                             <Setter TargetName="ToggleButton" Property="BorderBrush" Value="{DynamicResource AppAccentBrush}"/>
-                            <Setter TargetName="ToggleButton" Property="BorderThickness" Value="2"/>
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter Property="Background" Value="{DynamicResource AppSurfaceAltBrush}"/>
