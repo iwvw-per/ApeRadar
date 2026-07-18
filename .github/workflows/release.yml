@@ -1,0 +1,163 @@
+name: Build and Release ApeRadar
+
+run-name: Build ${{ inputs.release_name }} (${{ inputs.tag_name }})
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version embedded in the build and asset names
+        required: true
+        default: 2.1.0
+      tag_name:
+        description: Git tag used by the GitHub Release
+        required: true
+        default: v2.1.0
+      release_name:
+        description: GitHub Release title
+        required: true
+        default: ApeRadar v2.1.0
+      prerelease:
+        description: Publish as a prerelease
+        required: true
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ inputs.tag_name }}
+  cancel-in-progress: false
+
+env:
+  DOTNET_CLI_TELEMETRY_OPTOUT: 1
+  DOTNET_NOLOGO: true
+  CONFIGURATION: Release
+  RUNTIME_ID: win-x64
+
+jobs:
+  build-release:
+    name: Build win-x64 and publish release
+    runs-on: windows-latest
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore solution
+        shell: pwsh
+        run: dotnet restore .\ApeRadar.sln
+
+      - name: Run tests
+        shell: pwsh
+        run: dotnet test .\ApeRadar.sln --configuration $env:CONFIGURATION --no-restore
+
+      - name: Restore Windows runtime assets
+        shell: pwsh
+        run: dotnet restore .\ApeRadar\ApeRadar.csproj --runtime $env:RUNTIME_ID
+
+      - name: Publish self-contained Windows build
+        shell: pwsh
+        run: |
+          $buildDate = (Get-Date).ToUniversalTime().ToString('yyyyMMdd')
+          $publishDir = Join-Path $env:GITHUB_WORKSPACE "artifacts\publish\ApeRadar-${{ inputs.version }}-$env:RUNTIME_ID"
+
+          dotnet publish .\ApeRadar\ApeRadar.csproj `
+            --configuration $env:CONFIGURATION `
+            --runtime $env:RUNTIME_ID `
+            --self-contained true `
+            --no-restore `
+            --output $publishDir `
+            -p:Version=${{ inputs.version }} `
+            -p:ApeRadarSoftwareVersion=${{ inputs.version }} `
+            -p:ApeRadarSoftwareDate=$buildDate `
+            -p:DebugType=None `
+            -p:DebugSymbols=false
+
+          if (-not (Test-Path (Join-Path $publishDir 'ApeRadar.exe'))) {
+            throw 'Publish validation failed: ApeRadar.exe was not produced.'
+          }
+          if (-not (Test-Path (Join-Path $publishDir 'LICENSE.txt'))) {
+            throw 'Publish validation failed: LICENSE.txt was not produced.'
+          }
+
+      - name: Package release assets
+        id: package
+        shell: pwsh
+        run: |
+          $assetBaseName = "ApeRadar-${{ inputs.version }}-$env:RUNTIME_ID"
+          $publishDir = Join-Path $env:GITHUB_WORKSPACE "artifacts\publish\$assetBaseName"
+          $releaseDir = Join-Path $env:GITHUB_WORKSPACE 'artifacts\release'
+          $archivePath = Join-Path $releaseDir "$assetBaseName.zip"
+          $checksumPath = Join-Path $releaseDir "$assetBaseName.sha256"
+
+          New-Item -ItemType Directory -Path $releaseDir -Force | Out-Null
+          Compress-Archive -Path (Join-Path $publishDir '*') -DestinationPath $archivePath -CompressionLevel Optimal -Force
+
+          $hash = (Get-FileHash -Path $archivePath -Algorithm SHA256).Hash.ToLowerInvariant()
+          Set-Content -Path $checksumPath -Value "$hash  $assetBaseName.zip" -Encoding ascii
+
+          "asset_base_name=$assetBaseName" >> $env:GITHUB_OUTPUT
+          "archive_path=$archivePath" >> $env:GITHUB_OUTPUT
+          "checksum_path=$checksumPath" >> $env:GITHUB_OUTPUT
+
+      - name: Upload workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.package.outputs.asset_base_name }}
+          path: |
+            ${{ steps.package.outputs.archive_path }}
+            ${{ steps.package.outputs.checksum_path }}
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 30
+
+      - name: Create or update GitHub Release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $assetBaseName = '${{ steps.package.outputs.asset_base_name }}'
+          $archivePath = '${{ steps.package.outputs.archive_path }}'
+          $checksumPath = '${{ steps.package.outputs.checksum_path }}'
+          $tagName = '${{ inputs.tag_name }}'
+          $releaseName = '${{ inputs.release_name }}'
+          $notesPath = Join-Path $env:RUNNER_TEMP 'release-notes.md'
+
+          @"
+          ## $releaseName
+
+          Windows x64 self-contained build. No separate .NET Desktop Runtime installation is required.
+
+          - Package: ``$assetBaseName.zip``
+          - Checksum: ``$assetBaseName.sha256``
+          - Runtime: ``win-x64``
+          "@ | Set-Content -Path $notesPath -Encoding utf8
+
+          gh release view $tagName --repo '${{ github.repository }}' *> $null
+          if ($LASTEXITCODE -eq 0) {
+            gh release upload $tagName $archivePath $checksumPath --clobber --repo '${{ github.repository }}'
+            gh release edit $tagName --title $releaseName --notes-file $notesPath --latest --repo '${{ github.repository }}'
+          }
+          else {
+            $arguments = @(
+              'release', 'create', $tagName,
+              '--repo', '${{ github.repository }}',
+              '--target', '${{ github.sha }}',
+              '--title', $releaseName,
+              '--notes-file', $notesPath,
+              '--latest',
+              $archivePath,
+              $checksumPath
+            )
+            if ('${{ inputs.prerelease }}' -eq 'true') {
+              $arguments += '--prerelease'
+            }
+            gh @arguments
+          }
