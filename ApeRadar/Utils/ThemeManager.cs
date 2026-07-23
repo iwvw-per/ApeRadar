@@ -16,6 +16,9 @@ namespace ApeRadar.Utils
         private const string ThemeDictionaryPath = "/Resources/Themes/";
         private const string SharedTokensDictionaryName = "FluentTokens.xaml";
         private const string ControlStylesDictionaryName = "ControlStyles.xaml";
+        private const int DwmwaBorderColor = 34;
+        private const int DwmwaCaptionColor = 35;
+        private const int DwmwaTextColor = 36;
         private const int DwmwaUseImmersiveDarkMode = 20;
         private const int DwmwaUseImmersiveDarkModeBefore20H1 = 19;
 
@@ -68,6 +71,31 @@ namespace ApeRadar.Utils
             }
 
             SetImmersiveDarkMode(hwnd, IsDarkTheme);
+            SetWindowColors(hwnd);
+        }
+
+        private static void SetWindowColors(IntPtr hwnd)
+        {
+            Color captionColor = GetColor("AppBackgroundColor", IsDarkTheme ? Color.FromRgb(32, 32, 32) : Color.FromRgb(243, 243, 243));
+            Color borderColor = GetColor("AppBorderColor", IsDarkTheme ? Color.FromRgb(74, 74, 74) : Color.FromRgb(209, 209, 209));
+            Color textColor = GetColor("AppForegroundColor", IsDarkTheme ? Colors.White : Color.FromRgb(27, 27, 27));
+
+            SetDwmColor(hwnd, DwmwaCaptionColor, captionColor);
+            SetDwmColor(hwnd, DwmwaBorderColor, borderColor);
+            SetDwmColor(hwnd, DwmwaTextColor, textColor);
+        }
+
+        private static void SetDwmColor(IntPtr hwnd, int attribute, Color color)
+        {
+            try
+            {
+                int colorRef = color.R | (color.G << 8) | (color.B << 16);
+                _ = DwmSetWindowAttribute(hwnd, attribute, ref colorRef, Marshal.SizeOf<int>());
+            }
+            catch
+            {
+                // Windows versions without caption color support can ignore this.
+            }
         }
 
         public static Brush GetBrush(string resourceKey, Brush fallback)

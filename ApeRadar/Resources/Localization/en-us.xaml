@@ -35,6 +35,8 @@
     <system:String x:Key="BtnOpen">Open Replay</system:String>
     <system:String x:Key="BtnConfig">Config</system:String>
     <system:String x:Key="BtnScreenshot">Screenshot</system:String>
+    <system:String x:Key="BtnCopyOutput">Copy dashboard content</system:String>
+    <system:String x:Key="ToolTipCopyOutput">Copy all dashboard content</system:String>
 
     <system:String x:Key="ComboBoxItemLanguageAuto">Auto</system:String>
     <system:String x:Key="ComboBoxItemLanguageEnglish">English</system:String>

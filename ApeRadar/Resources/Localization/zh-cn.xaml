@@ -35,6 +35,8 @@
     <system:String x:Key="BtnOpen">打开Replay</system:String>
     <system:String x:Key="BtnConfig">设置</system:String>
     <system:String x:Key="BtnScreenshot">截图</system:String>
+    <system:String x:Key="BtnCopyOutput">复制看板内容</system:String>
+    <system:String x:Key="ToolTipCopyOutput">复制全部看板内容</system:String>
 
     <system:String x:Key="ComboBoxItemLanguageAuto">自动</system:String>
     <system:String x:Key="ComboBoxItemLanguageEnglish">English</system:String>

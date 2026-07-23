@@ -38,6 +38,30 @@
         <cvt:WatchStatusIconConverter x:Key="CvtWatchStatusIcon"/>
         <cvt:WatchStatusColorConverter x:Key="CvtWatchStatusColor"/>
         <cvt:NotificationMessageColorConverter x:Key="CvtNotificationMessageColor"/>
+
+        <Style x:Key="MainActionButtonStyle"
+               TargetType="{x:Type Button}"
+               BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="MinHeight" Value="36"/>
+            <Setter Property="Padding" Value="6,2"/>
+            <Setter Property="Margin" Value="3"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+
+        <Style x:Key="OutputCopyButtonStyle"
+               TargetType="{x:Type Button}"
+               BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Width" Value="32"/>
+            <Setter Property="Height" Value="32"/>
+            <Setter Property="MinWidth" Value="32"/>
+            <Setter Property="MinHeight" Value="32"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Margin" Value="0,0,6,6"/>
+            <Setter Property="ToolTip" Value="{DynamicResource ToolTipCopyOutput}"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
         
         <ToolTip x:Key="ToolTipStatisticsLegend">
             <Grid>
@@ -591,7 +615,38 @@
                 Style="{StaticResource FluentSurfaceStyle}"
                 Margin="8,0,0,8"
                 Padding="8">
-            <TextBox x:Name="TxtOutputText" HorizontalAlignment="Stretch" TextWrapping="Wrap" VerticalAlignment="Stretch" VerticalScrollBarVisibility="Auto" IsEnabled="{Binding Source={x:Static p:Settings.Default}, Path=OutputTextUnlock}" FontSize="{Binding Source={x:Static p:Settings.Default}, Path=OutputTextFontSize}"/>
+            <Grid>
+                <TextBox x:Name="TxtOutputText"
+                         HorizontalAlignment="Stretch"
+                         TextWrapping="Wrap"
+                         VerticalAlignment="Stretch"
+                         VerticalScrollBarVisibility="Auto"
+                         FontSize="{Binding Source={x:Static p:Settings.Default}, Path=OutputTextFontSize}">
+                    <TextBox.Style>
+                        <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}">
+                            <Setter Property="IsEnabled" Value="True"/>
+                            <Setter Property="IsReadOnly" Value="True"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Source={x:Static p:Settings.Default}, Path=OutputTextUnlock}" Value="True">
+                                    <Setter Property="IsReadOnly" Value="False"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBox.Style>
+                </TextBox>
+                <Button x:Name="BtnCopyOutput"
+                        Style="{StaticResource OutputCopyButtonStyle}"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Bottom"
+                        Panel.ZIndex="1"
+                        AutomationProperties.Name="{DynamicResource BtnCopyOutput}"
+                        Click="BtnCopyOutput_Click">
+                    <TextBlock Text="&#xE8C8;"
+                               FontFamily="Segoe Fluent Icons"
+                               FontSize="15"
+                               TextAlignment="Center"/>
+                </Button>
+            </Grid>
         </Border>
         <Border Grid.Row="3" Grid.Column="2"
                 Style="{StaticResource FluentSurfaceStyle}"
@@ -625,27 +680,23 @@
                         SnapsToDevicePixels="True">
                 <Button x:Name="BtnRefresh"
                         Content="{DynamicResource BtnRefresh}"
-                        MinHeight="{DynamicResource AppTouchTargetMinHeight}"
-                        MinWidth="88"
-                        Margin="10,5,5,5"
+                        Style="{StaticResource MainActionButtonStyle}"
+                        MinWidth="64"
                         Click="BtnRefresh_Click"/>
                 <Button x:Name="BtnOpen"
                         Content="{DynamicResource BtnOpen}"
-                        MinHeight="{DynamicResource AppTouchTargetMinHeight}"
-                        MinWidth="112"
-                        Margin="5"
+                        Style="{StaticResource MainActionButtonStyle}"
+                        MinWidth="96"
                         Click="BtnOpen_Click"/>
                 <Button x:Name="BtnConfig"
                         Content="{DynamicResource BtnConfig}"
-                        MinHeight="{DynamicResource AppTouchTargetMinHeight}"
-                        MinWidth="88"
-                        Margin="5"
+                        Style="{StaticResource MainActionButtonStyle}"
+                        MinWidth="64"
                         Click="BtnConfig_Click"/>
                 <Button x:Name="BtnScreenshot"
                         Content="{DynamicResource BtnScreenshot}"
-                        MinHeight="{DynamicResource AppTouchTargetMinHeight}"
-                        MinWidth="88"
-                        Margin="5"
+                        Style="{StaticResource MainActionButtonStyle}"
+                        MinWidth="64"
                         Click="BtnScreenshot_Click"/>
             </WrapPanel>
         </Grid>

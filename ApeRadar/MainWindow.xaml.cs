@@ -513,6 +513,23 @@ namespace ApeRadar
             NotificationMessageUtils.CreateMessage(MessageType.INFO, $"{FindResource("NotificationMessageScreenshotIsSavedTo") as string}{filePath}{FindResource("NotificationMessagePeriod") as string}");
         }
 
+        private void BtnCopyOutput_Click(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(TxtOutputText.Text))
+            {
+                return;
+            }
+
+            try
+            {
+                Clipboard.SetDataObject(TxtOutputText.Text, true);
+            }
+            catch (Exception ex)
+            {
+                LogUtils.WriteError("Failed to copy output text to the clipboard.", ex);
+            }
+        }
+
         //drag and drop a replay file on the window to open it
         private async void Window_Drop(object sender, DragEventArgs e)
         {
