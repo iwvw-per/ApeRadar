@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Net.Http;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 
@@ -91,11 +92,26 @@ namespace ApeRadar.Utils
             }
         }
 
+        private const int DownloadAttempts = 3;
+
         private static async Task<string> DownloadAndValidateAsync(string url, string fileName, string expectedSha256, bool validateHash)
         {
             Directory.CreateDirectory(AppPaths.DownloadDirectory);
             string packageFile = Path.Combine(AppPaths.DownloadDirectory, fileName);
-            await NetworkUtils.HttpDownloadFile(url, packageFile);
+
+            for (int attempt = 1; ; attempt++)
+            {
+                try
+                {
+                    await NetworkUtils.HttpDownloadFile(url, packageFile);
+                    break;
+                }
+                catch (HttpRequestException ex) when (attempt < DownloadAttempts && IsTransient(ex))
+                {
+                    LogUtils.WriteError($"Download attempt {attempt}/{DownloadAttempts} failed for {url}, retrying.", ex);
+                    await Task.Delay(TimeSpan.FromSeconds(attempt));
+                }
+            }
 
             if (validateHash)
             {
@@ -103,6 +119,14 @@ namespace ApeRadar.Utils
             }
 
             return packageFile;
+        }
+
+        private static bool IsTransient(HttpRequestException ex)
+        {
+            return ex.Message == "HttpRequestTimeout"
+                || ex.InnerException is TimeoutException
+                || ex.InnerException is IOException
+                || ex.InnerException is System.Net.Sockets.SocketException;
         }
 
         private static void ValidateSha256(string filename, string expectedSha256)
